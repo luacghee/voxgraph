@@ -1,0 +1,19 @@
+services:
+  voxgraph_app:
+    image: voxgraph:latest
+    tty: true
+    stdin_open: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw'
+      - ../../data:/voxgraph_ws/data
+    environment:
+      - DISPLAY=$DISPLAY
+      - HOST_DIR=${PWD}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: [gpu]

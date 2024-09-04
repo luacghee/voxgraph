@@ -56,7 +56,6 @@ Then compile voxgraph and its dependencies with:
 cd ~/catkin_ws/src/
 catkin build voxgraph
 ```
-    
 ## Run
 #### Demo
 We provide a demo dataset [here](http://robotics.ethz.ch/~asl-datasets/2020_voxgraph_arche), which features a hexacopter flying through an indoor-outdoor search and rescue training site. The rosbag includes the robot's visual, inertial and LiDAR sensor data, and the GPS RTK measurements used for the evaluations in the paper.
@@ -117,3 +116,30 @@ The frame convention used by voxgraph is shown on the right. The orange arrow co
 
 Setting the `output_odom_frame` to the same name as the `input_odom_frame`, and the `output_base_link_frame` to the same name as the `input_base_link_frame`, would give you a single connected tf tree as shown in the diagram.
 If you would rather keep the input and output tf trees disjoint, you could set different names for the `output_odom_frame` and/or `output_base_link_frame`. In this case voxgraph would automatically republish the odometry, using the new frame names you chose, each time it receives a pointcloud.
+
+## Docker Support
+Added in docker support to run voxgraph. Ensure docker installed on host machine.
+
+#### Build
+```shell script
+cd ~/catkin_ws
+git clone git@github.com:luacghee/voxgraph.git
+
+cd ~/catkin_ws/voxgraph/docker/
+docker build --ssh default -t voxgraph .
+```
+
+#### Run
+```shell script
+# Enable docker access to GUI apps
+xhost +local:docker
+
+# Normal launch. Note to mount the relevant data volume from host into the docker container.
+docker run -v /host/data/path:/docker/data/path -it voxgraph 
+
+# With Docker compose. Edit the volumes for the data paths for host and container.
+cd ~/catkin_ws/voxgraph/docker/
+docker compose up -d
+docker attach CONTAINER_ID
+```
+
